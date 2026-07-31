@@ -307,13 +307,13 @@ La siguiente captura muestra:
 * El tráfico generado mediante `ping`.
 * Los paquetes visibles en el modo de simulación.
 
-![Escenario con Loop de Capa 2](/Loop-L2_Spanning-Tree-Protocol_Daniel-Barillas_22193_Redes_Sec-10/Actividad-2/Screenshot_Loop_Capa2.png)
+![Escenario con Loop de Capa 2](Actividad-2/Screenshot_Loop_Capa2.png)
 
 ### Escenario con el loop interrumpido
 
 En esta captura se observa la topología después de eliminar el enlace directo entre `SW1` y `SW3`. La consola registra cuatro respuestas y 0 % de pérdida, confirmando que la comunicación se recuperó correctamente.
 
-![Escenario con el loop interrumpido](/Loop-L2_Spanning-Tree-Protocol_Daniel-Barillas_22193_Redes_Sec-10/Actividad-2/Screenshot_Loop_Roto.png)
+![Escenario con el loop interrumpido](Actividad-2/Screenshot_Loop_Roto.png)
 
 ---
 
