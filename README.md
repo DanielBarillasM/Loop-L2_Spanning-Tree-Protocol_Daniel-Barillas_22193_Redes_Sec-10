@@ -4,19 +4,19 @@
 
 ### Simulación de un Loop de Capa 2 y mitigación mediante STP
 
-![Cisco Packet Tracer](https://img.shields.io/badge/Cisco-Packet%20Tracer-1BA0D7?style=for-the-badge\&logo=cisco\&logoColor=white)
+![Cisco Packet Tracer](https://img.shields.io/badge/Cisco-Packet%20Tracer-1BA0D7?style=for-the-badge&logo=cisco&logoColor=white)
 ![Capa 2](https://img.shields.io/badge/Modelo%20OSI-Capa%202-172B4D?style=for-the-badge)
 ![STP](https://img.shields.io/badge/Protocolo-STP-2E8B57?style=for-the-badge)
 ![Estado](https://img.shields.io/badge/Estado-Completado-success?style=for-the-badge)
 
 ---
 
-**Universidad del Valle de Guatemala**
-**Curso:** CC3067 — Redes
-**Sección:** 11
-**Catedrático:** Kevin Antonio Velásquez Aguilar
-**Estudiante:** Pablo Daniel Barillas Moreno
-**Carné:** 22193
+**Universidad del Valle de Guatemala**<br>
+**Curso:** CC3067 — Redes<br>
+**Sección:** 10<br>
+**Catedrático:** Kevin Antonio Velásquez Aguilar<br>
+**Estudiante:** Pablo Daniel Barillas Moreno<br>
+**Carné:** 22193<br>
 **Año:** 2026
 
 </div>
@@ -25,18 +25,19 @@
 
 ## Contenido
 
-1. [Descripción](#-descripción)
-2. [Objetivos](#-objetivos)
-3. [Conceptos principales](#-conceptos-principales)
-4. [Topología implementada](#-topología-implementada)
-5. [Direccionamiento IP](#-direccionamiento-ip)
-6. [Procedimiento](#-procedimiento)
-7. [Comandos utilizados](#-comandos-utilizados)
-8. [Generación del loop](#-generación-del-loop)
-9. [Cómo se rompió el loop](#-cómo-se-rompió-el-loop)
-10. [Evidencias](#-evidencias)
-11. [Estructura del repositorio](#-estructura-del-repositorio)
-12. [Conclusiones](#-conclusiones)
+1. [Descripción](#descripción)
+2. [Objetivos](#objetivos)
+3. [Conceptos principales](#conceptos-principales)
+4. [Topología implementada](#topología-implementada)
+5. [Direccionamiento IP](#direccionamiento-ip)
+6. [Procedimiento](#procedimiento)
+7. [Comandos utilizados](#comandos-utilizados)
+8. [Generación del loop](#generación-del-loop)
+9. [Cómo se rompió el loop](#cómo-se-rompió-el-loop)
+10. [Evidencias](#evidencias)
+11. [Estructura del repositorio](#estructura-del-repositorio)
+12. [Resultados](#resultados)
+13. [Conclusiones](#conclusiones)
 
 ---
 
@@ -46,7 +47,7 @@ En esta actividad se construyó un escenario de red en **Cisco Packet Tracer** p
 
 La topología fue construida con tres switches Cisco 2960 conectados en forma de triángulo y dos computadoras ubicadas en los extremos de la red. Después de comprobar la comunicación inicial, STP fue desactivado en la VLAN 1 y se agregó el último enlace entre los switches para cerrar el circuito.
 
-Posteriormente, se generó tráfico ICMP mediante el comando `ping` y se observó el comportamiento de las tramas en el modo de simulación. Finalmente, el loop fue interrumpido mediante la desconexión de un enlace y se habilitó nuevamente STP para comprobar cómo el protocolo bloquea automáticamente uno de los caminos redundantes.
+Posteriormente, se generó tráfico mediante el comando `ping` y se observó el comportamiento de las tramas en el modo de simulación. Finalmente, el loop fue interrumpido mediante la eliminación del enlace directo entre `SW1` y `SW3`. Además, se documentaron la reactivación de STP y el apagado administrativo de un puerto como métodos alternativos para prevenir o interrumpir el loop.
 
 ---
 
@@ -159,8 +160,8 @@ No fue necesario configurar una puerta de enlace porque ambas computadoras perte
 9. Se generó tráfico ICMP en el modo de simulación.
 10. Se observó la circulación de paquetes entre los switches.
 11. Se eliminó uno de los enlaces para romper el loop.
-12. STP fue habilitado nuevamente.
-13. Se reconectó el enlace redundante para verificar el bloqueo automático de un puerto.
+12. Se comprobó nuevamente la comunicación después de retirar el enlace.
+13. Se documentó la reactivación de STP como solución para conservar la redundancia sin permitir el loop.
 
 ---
 
@@ -225,7 +226,7 @@ Luego se cambió Packet Tracer al modo **Simulation** y se generó tráfico desd
 ping 192.168.1.20
 ```
 
-También se utilizó la herramienta **Add Simple PDU** para visualizar el recorrido de las tramas.
+Se utilizó la opción **Auto Capture/Play** del panel de simulación para observar el recorrido y la repetición de las tramas.
 
 En los filtros de simulación se seleccionaron principalmente:
 
@@ -272,7 +273,7 @@ end
 
 ### Método 3: reactivación de STP
 
-La solución correcta para conservar la redundancia consiste en habilitar nuevamente STP en los tres switches:
+Como alternativa recomendada para conservar la redundancia, STP puede habilitarse nuevamente en los tres switches:
 
 ```text
 enable
@@ -310,7 +311,7 @@ La siguiente captura muestra:
 
 ### Escenario con el loop interrumpido
 
-En esta captura se observa la topología después de eliminar el enlace directo entre `SW1` y `SW3`.
+En esta captura se observa la topología después de eliminar el enlace directo entre `SW1` y `SW3`. La consola registra cuatro respuestas y 0 % de pérdida, confirmando que la comunicación se recuperó correctamente.
 
 ![Escenario con el loop interrumpido](/Loop-L2_Spanning-Tree-Protocol_Daniel-Barillas_22193_Redes_Sec-10/Actividad-2/Screenshot_Loop_Roto.png)
 
@@ -324,6 +325,7 @@ Loop-L2_Spanning-Tree-Protocol_Daniel-Barillas_22193/
 │   └── Explicacion_Loop_STP.pdf
 ├── Actividad-2/
 │   ├── Escenario_Loop_STP.pkt
+│   ├── Video_Demostracion_Loop_Capa2.mp4
 │   ├── Pasos_y_Comandos_Loop_STP.txt
 │   ├── Screenshot_Loop_Capa2.png
 │   └── Screenshot_Loop_Roto.png
@@ -339,6 +341,7 @@ Loop-L2_Spanning-Tree-Protocol_Daniel-Barillas_22193/
 | `Escenario_Loop_STP.pkt`        | Escenario original creado en Cisco Packet Tracer.          |
 | `Explicacion_Loop_STP.pdf`      | Explicación escrita a mano sobre el Loop de Capa 2 y STP.  |
 | `Pasos_y_Comandos_Loop_STP.txt` | Pasos y comandos utilizados para generar y romper el loop. |
+| `Video_Demostracion_Loop_Capa2.mp4` | Demostración del loop, acumulación de tráfico, eliminación del enlace y recuperación de la comunicación. |
 | `Screenshot_Loop_Capa2.png`     | Evidencia del escenario con el circuito cerrado.           |
 | `Screenshot_Loop_Roto.png`      | Evidencia del escenario después de romper el loop.         |
 
@@ -354,8 +357,8 @@ Durante la práctica se consiguió:
 * Formar un circuito cerrado entre tres switches.
 * Generar y visualizar tráfico en el modo de simulación.
 * Interrumpir el loop eliminando un enlace.
-* Reactivar STP como mecanismo de prevención.
-* Comprobar que STP puede conservar la redundancia bloqueando un puerto.
+* Comprobar que la comunicación se recuperó después de eliminar el enlace redundante.
+* Documentar el funcionamiento de STP como mecanismo para prevenir Loops de Capa 2.
 
 ---
 
