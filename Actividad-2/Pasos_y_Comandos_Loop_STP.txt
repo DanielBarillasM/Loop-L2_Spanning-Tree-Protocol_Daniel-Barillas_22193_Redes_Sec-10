@@ -1,0 +1,215 @@
+UNIVERSIDAD DEL VALLE DE GUATEMALA
+Curso: Redes
+Actividad: Loop L2 - Spanning Tree Protocol
+
+Nombre: Pablo Daniel Barillas Moreno
+Carné: 22193
+
+============================================================
+1. OBJETIVO
+============================================================
+
+El objetivo de la práctica fue crear un Loop de Capa 2 en Cisco
+Packet Tracer, observar su efecto sobre el tráfico de la red y
+posteriormente romperlo mediante la desconexión de un enlace y
+la activación del protocolo Spanning Tree Protocol (STP).
+
+============================================================
+2. DISPOSITIVOS UTILIZADOS
+============================================================
+
+- Tres switches Cisco 2960: SW1, SW2 y SW3.
+- Dos computadoras: PC0 y PC1.
+- Cinco conexiones Ethernet.
+
+============================================================
+3. CONEXIONES REALIZADAS
+============================================================
+
+PC0 FastEthernet0 con SW3 FastEthernet0/1.
+SW1 FastEthernet0/2 con SW2 FastEthernet0/2.
+SW2 FastEthernet0/3 con SW3 FastEthernet0/3.
+PC1 FastEthernet0 con SW1 FastEthernet0/1.
+SW3 FastEthernet0/4 con SW1 FastEthernet0/4.
+
+La conexión entre SW3 y SW1 cerró el circuito entre los tres
+switches y creó un camino redundante.
+
+============================================================
+4. DIRECCIONES IP
+============================================================
+
+PC0:
+Dirección IP: 192.168.1.10
+Máscara de subred: 255.255.255.0
+
+PC1:
+Dirección IP: 192.168.1.20
+Máscara de subred: 255.255.255.0
+
+No fue necesario configurar una puerta de enlace porque las dos
+computadoras pertenecen a la misma red local.
+
+============================================================
+5. VERIFICACIÓN INICIAL
+============================================================
+
+Desde la consola de PC0 se utilizó el siguiente comando:
+
+ping 192.168.1.20
+
+Este comando permitió generar tráfico y verificar la comunicación
+entre las dos computadoras.
+
+============================================================
+6. COMANDOS PARA GENERAR EL LOOP
+============================================================
+
+En SW1 se utilizaron los siguientes comandos:
+
+enable
+configure terminal
+hostname SW1
+no spanning-tree vlan 1
+end
+show spanning-tree vlan 1
+
+En SW2 se utilizaron los siguientes comandos:
+
+enable
+configure terminal
+hostname SW2
+no spanning-tree vlan 1
+end
+show spanning-tree vlan 1
+
+En SW3 se utilizaron los siguientes comandos:
+
+enable
+configure terminal
+hostname SW3
+no spanning-tree vlan 1
+end
+show spanning-tree vlan 1
+
+El comando "no spanning-tree vlan 1" desactivó STP para la VLAN 1.
+Después de desactivar STP en los tres switches, se conectó el puerto
+FastEthernet0/4 de SW3 con el puerto FastEthernet0/4 de SW1.
+
+Esta conexión cerró el circuito entre SW1, SW2 y SW3. Como STP se
+encontraba desactivado, ningún puerto fue bloqueado y se produjo
+un Loop de Capa 2.
+
+============================================================
+7. GENERACIÓN Y OBSERVACIÓN DEL TRÁFICO
+============================================================
+
+Packet Tracer se cambió del modo Realtime al modo Simulation. En los
+filtros de simulación se desmarcaron todos los protocolos y se dejaron
+seleccionados únicamente ARP e ICMP.
+
+Debido a que anteriormente se había realizado una prueba de
+conectividad, se eliminó la entrada correspondiente de la tabla ARP
+de PC0 mediante el siguiente comando:
+
+arp -d 192.168.1.20
+
+Esto permitió que la siguiente prueba generara una nueva solicitud
+ARP de broadcast. Desde PC0 se ejecutó:
+
+ping 192.168.1.20
+
+También se utilizó la herramienta Add Simple PDU desde PC0 hacia PC1.
+Luego se utilizó la opción Capture/Forward para observar el recorrido
+de las tramas.
+
+Como STP se encontraba desactivado y los tres switches formaban un
+circuito cerrado, las tramas de broadcast podían duplicarse y circular
+repetidamente entre SW1, SW2 y SW3. En el panel de simulación se
+observaron múltiples eventos relacionados con ARP e ICMP, lo que
+representó el comportamiento de un Loop de Capa 2 y el inicio de una
+tormenta de broadcast.
+
+============================================================
+8. PROCEDIMIENTO PARA ROMPER EL LOOP
+============================================================
+
+La primera forma utilizada para romper el loop fue eliminar el enlace:
+
+SW3 FastEthernet0/4 con SW1 FastEthernet0/4.
+
+Al desconectar este enlace, el circuito dejó de estar cerrado y las
+tramas dejaron de circular repetidamente.
+
+También se puede romper el loop apagando el puerto de SW1 con los
+siguientes comandos:
+
+enable
+configure terminal
+interface fastEthernet 0/4
+shutdown
+end
+
+Para levantar nuevamente el puerto se utilizan estos comandos:
+
+enable
+configure terminal
+interface fastEthernet 0/4
+no shutdown
+end
+
+============================================================
+9. REACTIVACIÓN DE STP
+============================================================
+
+Para solucionar correctamente el problema y mantener el enlace
+redundante, STP se habilitó nuevamente en los tres switches.
+
+Comandos utilizados en SW1:
+
+enable
+configure terminal
+spanning-tree vlan 1
+end
+show spanning-tree vlan 1
+
+Comandos utilizados en SW2:
+
+enable
+configure terminal
+spanning-tree vlan 1
+end
+show spanning-tree vlan 1
+
+Comandos utilizados en SW3:
+
+enable
+configure terminal
+spanning-tree vlan 1
+end
+show spanning-tree vlan 1
+
+Después de reactivar STP se conectó nuevamente SW3 FastEthernet0/4
+con SW1 FastEthernet0/4. STP detectó el camino redundante y colocó
+uno de los puertos en estado bloqueado.
+
+El estado de los puertos se comprobó con:
+
+show spanning-tree vlan 1
+
+En la salida del comando se observó que uno de los puertos
+redundantes estaba bloqueado. De esta manera, STP rompió el loop
+lógicamente y mantuvo el enlace disponible como respaldo ante
+una posible falla.
+
+============================================================
+10. CONCLUSIÓN
+============================================================
+
+La práctica permitió comprobar que un circuito cerrado entre switches
+puede provocar un Loop de Capa 2 cuando STP se encuentra desactivado.
+El loop produce duplicación de tramas, tormentas de broadcast,
+inestabilidad en las tablas MAC, pérdida de paquetes y saturación de
+la red. Al habilitar STP, los switches seleccionaron un camino activo
+y bloquearon uno de los enlaces redundantes. De esta forma, STP evita
+el loop sin eliminar la redundancia de la red.
